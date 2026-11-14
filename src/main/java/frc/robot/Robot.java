@@ -7,10 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * This sample program shows how to control a motor using a joystick. In the operator control part
@@ -22,24 +24,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * <p>In addition, the encoder value of an encoder connected to ports 0 and 1 is consistently sent
  * to the Dashboard.
  */
+@Logged
 public class Robot extends TimedRobot {
-  private static final int kMotorPort = 10;
-  private static final int kJoystickPort = 0;
-  private static final int kEncoderPortA = 0;
-  private static final int kEncoderPortB = 1;
+  private RobotContainer robotContainer = new RobotContainer();
 
-  private final SparkMax m_motor;
-  private final Joystick m_joystick;
-  private final Encoder m_encoder;
 
   /** Called once at the beginning of the robot program. */
   public Robot() {
-    m_motor = new SparkMax(kMotorPort, MotorType.kBrushless);
-    m_joystick = new Joystick(kJoystickPort);
-    m_encoder = new Encoder(kEncoderPortA, kEncoderPortB);
+    Epilogue.configure(config -> {config.root = "Telemetry";});
+    Epilogue.bind(this);
     // Use SetDistancePerPulse to set the multiplier for GetDistance
     // This is set up assuming a 6 inch wheel with a 360 CPR encoder.
-    m_encoder.setDistancePerPulse((Math.PI * 6) / 360.0);
   }
 
   /*
@@ -48,12 +43,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Encoder", m_encoder.getDistance());
+    CommandScheduler.getInstance().run();
+    robotContainer.periodic();
   }
 
   /** The teleop periodic function is called every control packet in teleop. */
   @Override
   public void teleopPeriodic() {
-    m_motor.set(m_joystick.getY());
   }
 }
