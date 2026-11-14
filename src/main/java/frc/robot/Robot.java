@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -21,18 +23,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * to the Dashboard.
  */
 public class Robot extends TimedRobot {
-  private static final int kMotorPort = 0;
+  private static final int kMotorPort = 10;
   private static final int kJoystickPort = 0;
   private static final int kEncoderPortA = 0;
   private static final int kEncoderPortB = 1;
 
-  private final PWMSparkMax m_motor;
+  private final SparkMax m_motor;
   private final Joystick m_joystick;
   private final Encoder m_encoder;
 
   /** Called once at the beginning of the robot program. */
   public Robot() {
-    m_motor = new PWMSparkMax(kMotorPort);
+    m_motor = new SparkMax(kMotorPort, MotorType.kBrushless);
     m_joystick = new Joystick(kJoystickPort);
     m_encoder = new Encoder(kEncoderPortA, kEncoderPortB);
     // Use SetDistancePerPulse to set the multiplier for GetDistance
